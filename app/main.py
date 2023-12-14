@@ -6,9 +6,19 @@ from contextlib import asynccontextmanager
 from typing import List, Dict
 from fastapi import FastAPI
 from pydantic import BaseModel
+import logging
 
 from app.utils import (
     get_model,
+)
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    handlers=[
+        logging.FileHandler("log_file.log"),
+        logging.StreamHandler(),
+    ],
 )
 
 
@@ -104,5 +114,6 @@ async def predict(
     }
 
     predictions = model.predict(query)
-
+    # Logging
+    logging.info(f"{{'Query': {description}, 'Response': {predictions[0]}}}")
     return predictions[0]
